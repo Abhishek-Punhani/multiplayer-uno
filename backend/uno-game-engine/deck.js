@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 const colors = ['red', 'yellow', 'green', 'blue'];
 const values = [
     '0',
@@ -40,15 +41,39 @@ const deck = [];
  The function makeCard is used to make the card objects.
  @returns {Array} deck - An array of 108 UNO cards.
  */
+
 export default function getShuffledCardDeck() {
-    const deck = [];
+    // generating cards of each color
+
+for(let col of colors){
+   for(let val of values){
+    if(val.length==1){
+        for(let i=0;i<2;i++){
+            makeCard("number",col,val);
+            if(val==0) break;
+            
+        }
+    }else{
+        for(let i=0;i<2;i++){
+            makeCard("special",col,val);
+        }
+    }
+   
+   }
+}
+   // generating special cards
+   for(let sc of specialCards){
+    for(let i=0;i<4;i++){
+        makeCard("special","wild",sc);
+    }
+   }
     // todo: Implement the card generation logic
     // dummy code:
     // deck.push(makeCard('special', 'wild', 'wild'))
     // deck.push(makeCard('number', 'red', '0'))
 
-    shuffle(deck)
-    return deck
+   let shuffledDeck= shuffle(deck)
+    return shuffledDeck
 }
 
 /**
@@ -59,16 +84,30 @@ export default function getShuffledCardDeck() {
  * @returns {{type: string, color: string, value: string, id: unknown}} card - An object representing an UNO card.
  */
 function makeCard(type, color, value) {
-    //todo: Implement unique identification of cards by assigning an id to each card
-    return { type, color, value };
+    let card={
+        id:uuidv4(),
+        type:type,
+        color:color,
+        value:value,
+    };
+    deck.push(card);
 }
 
 /**
  * This function shuffles the elements of the given array *in place* . The function behaves in a type-agnostic way.
  * Time complexity: O(n)
- * @param {Array} deck 
+ * 
  */
 function shuffle(deck) {
-    //todo: Implement a generic shuffling algorithm
-    [deck[0], deck[1]] = [deck[1], deck[0]];
+    let n = deck.length;
+  
+  for (let i = n - 1; i > 0; i--) {
+    // Pick a random index from 0 to i (inclusive)
+    let j = Math.floor(Math.random() * (i + 1));
+    
+    // Swap the elements at indices i and j
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  
+  return deck;
 }
